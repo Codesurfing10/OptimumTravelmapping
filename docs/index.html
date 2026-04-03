@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Optimum Travel Mapping — NOAA-powered ocean weather route planner using NDBC buoy data and geospatial grid mapping." />
+  <title>OptimumTravelMapping — Ocean Route Planner</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-brand">
+      <span class="brand-icon">🌊</span>
+      <div>
+        <h1>OptimumTravelMapping</h1>
+        <div class="sub">NOAA · NDBC Buoys · Ocean Route Optimizer</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="loadBuoys()" title="Reload buoy observations">
+        🔄 Refresh Buoys
+      </button>
+      <button class="btn btn-danger" onclick="clearRoute()" title="Clear planned route">
+        🗑 Clear Route
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Main area ────────────────────────────────────────────────────────── -->
+  <div class="main-area">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+      <!-- Route planner -->
+      <div class="sidebar-section">
+        <h2>🗺 Plan Your Route</h2>
+
+        <!-- Start point -->
+        <div class="input-group">
+          <label>Start Point</label>
+          <div class="coord-row">
+            <input type="number" id="start-lat" placeholder="Lat (e.g. 25.77)" step="0.0001" min="-90" max="90" />
+            <input type="number" id="start-lon" placeholder="Lon (e.g. -80.19)" step="0.0001" min="-180" max="180" />
+            <button class="btn" title="Apply manual coordinates" onclick="applyManualCoords('start')">✓</button>
+          </div>
+          <div class="coord-display" id="start-coords">Not set</div>
+          <button class="btn btn-full" id="pick-start-btn" onclick="setPickMode(state.picking === 'start' ? null : 'start')">
+            📍 Click Map to Set Start
+          </button>
+        </div>
+
+        <!-- End point -->
+        <div class="input-group">
+          <label>End Point</label>
+          <div class="coord-row">
+            <input type="number" id="end-lat" placeholder="Lat (e.g. 40.71)" step="0.0001" min="-90" max="90" />
+            <input type="number" id="end-lon" placeholder="Lon (e.g. -74.01)" step="0.0001" min="-180" max="180" />
+            <button class="btn" title="Apply manual coordinates" onclick="applyManualCoords('end')">✓</button>
+          </div>
+          <div class="coord-display" id="end-coords">Not set</div>
+          <button class="btn btn-full" id="pick-end-btn" onclick="setPickMode(state.picking === 'end' ? null : 'end')">
+            🏁 Click Map to Set End
+          </button>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="optimize-btn" onclick="optimizeRoute()">
+          ⚡ Optimize Route
+        </button>
+      </div>
+
+      <!-- Example routes -->
+      <div class="sidebar-section">
+        <h2>🧭 Quick Examples</h2>
+        <div class="btn-row">
+          <button class="btn" title="Miami to New York" onclick="loadExample(25.77,-80.19,40.71,-74.01)">
+            🇺🇸 Miami → NYC
+          </button>
+          <button class="btn" title="Bermuda Triangle area" onclick="loadExample(25.0,-71.0,32.3,-64.8)">
+            ⚓ Bermuda
+          </button>
+          <button class="btn" title="Gulf of Mexico crossing" onclick="loadExample(29.95,-90.07,25.68,-97.31)">
+            🌊 Gulf Coast
+          </button>
+          <button class="btn" title="Pacific Honolulu to LA" onclick="loadExample(21.31,-157.86,34.05,-118.24)">
+            🌺 Hawaii → LA
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary panel (shown after route optimization) -->
+      <div id="summary-panel"></div>
+
+      <!-- Legend -->
+      <div class="sidebar-section">
+        <h2>📡 Buoy Data Legend</h2>
+        <table class="bp-table">
+          <tr><td><span style="color:#2ecc71">● Calm</span></td><td style="color:#7ab3cc">Score 0–2, safe</td></tr>
+          <tr><td><span style="color:#f1c40f">● Moderate</span></td><td style="color:#7ab3cc">Score 2–4</td></tr>
+          <tr><td><span style="color:#e67e22">● Rough</span></td><td style="color:#7ab3cc">Score 4–6</td></tr>
+          <tr><td><span style="color:#e74c3c">● Very Rough</span></td><td style="color:#7ab3cc">Score 6–8</td></tr>
+          <tr><td><span style="color:#8e44ad">● Storm</span></td><td style="color:#7ab3cc">Score 8–10</td></tr>
+        </table>
+        <div style="margin-top:0.7rem;font-size:0.7rem;color:#7ab3cc;">
+          <div>── Optimal route &nbsp;·&nbsp; - - Direct route</div>
+          <div style="margin-top:0.3rem;">Data: NOAA NDBC · NWS Weather API</div>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="sidebar-section brand-info">
+        <h2>ℹ About</h2>
+        <p style="font-size:0.72rem;color:#7ab3cc;line-height:1.6;">
+          Real-time ocean conditions from <strong style="color:#cde8f0;">NOAA NDBC</strong> buoy network.
+          Routes are optimised across a lateral grid of candidate paths, each scored by wave height,
+          wind speed, and precipitation probability. The safest lane is highlighted in
+          <span style="color:#00d4ff;">cyan</span>.
+        </p>
+      </div>
+
+    </aside>
+
+    <!-- Map -->
+    <div id="map"></div>
+
+  </div>
+
+  <!-- Status bar -->
+  <div id="status-bar" class="status-bar">Initializing…</div>
+
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- App scripts -->
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/map.js"></script>
+
+<script>
+  // Quick-example loader
+  function loadExample(sLat, sLon, eLat, eLon) {
+    state.routeStart = [sLat, sLon];
+    state.routeEnd = [eLat, eLon];
+    document.getElementById('start-lat').value = sLat;
+    document.getElementById('start-lon').value = sLon;
+    document.getElementById('end-lat').value = eLat;
+    document.getElementById('end-lon').value = eLon;
+    document.getElementById('start-coords').textContent = `${sLat}, ${sLon}`;
+    document.getElementById('end-coords').textContent = `${eLat}, ${eLon}`;
+    updatePinOnMap('start', sLat, sLon);
+    updatePinOnMap('end', eLat, eLon);
+    map.fitBounds([[Math.min(sLat,eLat)-2, Math.min(sLon,eLon)-2],
+                   [Math.max(sLat,eLat)+2, Math.max(sLon,eLon)+2]]);
+    setStatus('Example loaded — click ⚡ Optimize Route to analyse conditions.');
+  }
+</script>
+
+</body>
+</html>
