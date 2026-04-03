@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Crypto Wallet — Stellar Exchange{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+  <div class="page-header">
+    <h1 class="page-title">Crypto Wallet</h1>
+    <p class="page-subtitle">Connect your MetaMask wallet to trade with crypto</p>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+
+    <!-- Connection Panel -->
+    <div>
+      <div class="wallet-connect-box">
+        <div class="wallet-icon">🦊</div>
+        <h2 style="font-family:var(--font-heading); font-size:1.25rem; margin-bottom:0.75rem;">MetaMask Wallet</h2>
+        <p class="text-sm text-muted mb-3">Connect your Ethereum wallet to execute crypto payments on space resource contracts.</p>
+        <button id="connect-wallet-big" class="btn btn-primary btn-lg w-full" style="justify-content:center;">
+          🔌 Connect MetaMask Wallet
+        </button>
+        <div id="wallet-address-display" style="margin-top:1rem;" class="wallet-address text-sm">—</div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="detail-panel">
+        <div class="card-header">
+          <div class="card-title">How to Connect</div>
+        </div>
+        <ol style="padding-left:1.25rem; color:var(--text-secondary); font-size:0.875rem; line-height:2;">
+          <li>Install <a href="https://metamask.io" target="_blank" rel="noopener" style="color:var(--accent-cyan);">MetaMask</a> browser extension</li>
+          <li>Create or import an Ethereum wallet</li>
+          <li>Click the "Connect MetaMask Wallet" button above</li>
+          <li>Approve the connection in the MetaMask popup</li>
+          <li>Your wallet address will appear once connected</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+      <!-- Supported Networks -->
+      <div class="detail-panel">
+        <div class="card-header">
+          <div class="card-title">Supported Networks</div>
+        </div>
+        <div class="table-wrapper">
+          <table class="network-table">
+            <thead>
+              <tr>
+                <th>Network</th>
+                <th>Chain ID</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-title">Ethereum Mainnet</td>
+                <td class="td-hash">1</td>
+                <td><span class="badge badge-open">Active</span></td>
+              </tr>
+              <tr>
+                <td class="td-title">Polygon (MATIC)</td>
+                <td class="td-hash">137</td>
+                <td><span class="badge badge-open">Active</span></td>
+              </tr>
+              <tr>
+                <td class="td-title">Ethereum Goerli (Testnet)</td>
+                <td class="td-hash">5</td>
+                <td><span class="badge badge-category">Testnet</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Smart Contract -->
+      <div class="detail-panel">
+        <div class="card-header">
+          <div class="card-title">Smart Contract Address</div>
+        </div>
+        {% if smart_contract_address %}
+        <div class="wallet-address">{{ smart_contract_address }}</div>
+        {% else %}
+        <div class="wallet-address" style="color:var(--text-muted);">Not configured — set SMART_CONTRACT_ADDRESS env variable</div>
+        {% endif %}
+        <p class="text-xs text-muted mt-1">This is the on-chain escrow contract for trade settlement.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Transaction History -->
+  <div style="margin-top:2.5rem;">
+    <div class="d-flex justify-between align-center mb-2">
+      <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--text-primary);">Crypto Transaction History</h2>
+      <span class="badge badge-category">{{ transactions | length }} record{{ 's' if transactions | length != 1 }}</span>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Contract</th>
+            <th>Buyer Wallet</th>
+            <th>Amount (USD)</th>
+            <th>Tx Hash</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if transactions %}
+            {% for txn in transactions %}
+            <tr>
+              <td class="text-muted">{{ txn.id }}</td>
+              <td class="td-title">
+                <a href="{{ url_for('contract_detail', contract_id=txn.contract_id) }}" style="color:var(--accent-cyan); text-decoration:none;">
+                  #{{ txn.contract_id }}
+                </a>
+              </td>
+              <td class="td-hash">{{ txn.buyer_wallet[:10] }}…{{ txn.buyer_wallet[-6:] if txn.buyer_wallet else '—' }}</td>
+              <td class="td-price">${{ "{:,.2f}".format(txn.amount_usd) }}</td>
+              <td class="td-hash">{% if txn.tx_hash %}{{ txn.tx_hash[:12] }}…{% else %}—{% endif %}</td>
+              <td><span class="badge badge-{% if txn.status == 'COMPLETED' %}open{% elif txn.status == 'PENDING' %}forward{% else %}expired{% endif %}">{{ txn.status }}</span></td>
+              <td class="text-muted">{{ txn.created_at.strftime('%b %d, %Y') }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="7" style="text-align:center; padding:2.5rem; color:var(--text-muted);">
+                No crypto transactions recorded yet.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

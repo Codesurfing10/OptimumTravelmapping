@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} — Stellar Exchange{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+
+  <!-- Category Header -->
+  <div class="detail-panel mb-3">
+    <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+      <div style="font-size:4rem; line-height:1;">{{ category.icon_emoji }}</div>
+      <div style="flex:1; min-width:200px;">
+        <h1 class="page-title" style="margin-bottom:0.25rem;">{{ category.name }}</h1>
+        <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:0.75rem;">
+          <span style="font-family:var(--font-heading); font-size:1.75rem; color:var(--accent-cyan);">
+            ${{ "{:,.2f}".format(category.current_price_usd) }}
+          </span>
+          <span style="font-size:0.9rem; color:var(--text-muted);">per {{ category.unit }}</span>
+          <span class="{% if category.price_change_24h >= 0 %}text-green{% else %}text-red{% endif %}" style="font-size:0.9rem; font-weight:600;">
+            {% if category.price_change_24h >= 0 %}▲ +{% else %}▼ {% endif %}{{ "{:.2f}".format(category.price_change_24h) }}% (24h)
+          </span>
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">{{ category.description }}</p>
+      </div>
+      <a href="{{ url_for('create_contract') }}" class="btn btn-primary">+ List Contract</a>
+    </div>
+  </div>
+
+  <!-- Price Chart Placeholder -->
+  <div class="detail-panel mb-3">
+    <div class="card-header">
+      <div class="card-title">Price History</div>
+    </div>
+    <canvas id="price-chart" style="display:none;"></canvas>
+    <div class="chart-placeholder">
+      📈 Price Chart Coming Soon
+    </div>
+  </div>
+
+  <!-- Contracts in this category -->
+  <div class="d-flex justify-between align-center mb-2">
+    <h2 class="section-title" style="font-size:1.5rem;">Contracts in {{ category.name }}</h2>
+    <span class="badge badge-category">{{ contracts | length }} total</span>
+  </div>
+
+  {% if contracts %}
+  <div class="grid-3">
+    {% for contract in contracts %}
+    <div class="contract-card">
+      <div class="contract-card-header">
+        <div>
+          <div class="contract-badges mb-1">
+            <span class="badge badge-{{ contract.contract_type | lower }}">{{ contract.contract_type }}</span>
+            <span class="badge badge-{{ contract.status | lower }}">{{ contract.status }}</span>
+          </div>
+          <div class="contract-card-title">{{ contract.title }}</div>
+        </div>
+      </div>
+      <div class="contract-meta">
+        <div class="meta-item">
+          <div class="meta-label">Quantity</div>
+          <div class="meta-value">{{ "{:,.1f}".format(contract.resource_quantity) }} {{ contract.unit }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Strike Price</div>
+          <div class="meta-value price">${{ "{:,.2f}".format(contract.strike_price_usd) }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Premium</div>
+          <div class="meta-value premium">${{ "{:,.2f}".format(contract.premium_usd) }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Expires</div>
+          <div class="meta-value">{{ contract.expiry_date.strftime('%b %d, %Y') }}</div>
+        </div>
+      </div>
+      <div class="contract-actions">
+        <a href="{{ url_for('contract_detail', contract_id=contract.id) }}" class="btn btn-outline btn-sm">View Details</a>
+        {% if contract.status == 'OPEN' %}
+          {% if contract.payment_method in ('STRIPE', 'BOTH') %}
+          <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="{{ contract.id }}" data-amount="{{ contract.premium_usd }}">💳 Buy</button>
+          {% elif contract.payment_method == 'CRYPTO' %}
+          <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="{{ contract.id }}">⚡ Buy</button>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">{{ category.icon_emoji }}</div>
+    <div class="empty-title">No contracts in this category yet</div>
+    <p class="text-muted text-sm mb-2">Be the first to list a {{ category.name }} contract.</p>
+    <a href="{{ url_for('create_contract') }}" class="btn btn-primary mt-1">+ Create Contract</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

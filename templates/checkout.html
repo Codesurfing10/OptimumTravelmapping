@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout — {{ contract.title }} — Stellar Exchange{% endblock %}
+
+{% block extra_head %}
+<meta name="stripe-key" content="{{ stripe_key }}" />
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:900px; padding-top:2rem; padding-bottom:4rem;">
+
+  <div class="page-header">
+    <h1 class="page-title">Checkout</h1>
+    <p class="page-subtitle">Complete your space resource contract purchase</p>
+  </div>
+
+  <div class="checkout-grid">
+
+    <!-- Order Summary -->
+    <div class="detail-panel">
+      <div class="card-header">
+        <div class="card-title">Order Summary</div>
+      </div>
+      <div style="margin-bottom:1.25rem;">
+        <div class="contract-badges mb-2">
+          <span class="badge badge-{{ contract.contract_type | lower }}">{{ contract.contract_type }}</span>
+          <span class="badge badge-category">{{ contract.category.icon_emoji }} {{ contract.category.name }}</span>
+        </div>
+        <h3 style="font-family:var(--font-heading); font-size:1rem; color:var(--text-primary); margin-bottom:1rem; line-height:1.4;">{{ contract.title }}</h3>
+      </div>
+
+      <table class="terms-table">
+        <tr><td>Resource</td><td>{{ contract.resource_quantity }} {{ contract.unit }} of {{ contract.category.name }}</td></tr>
+        <tr><td>Contract Type</td><td>{{ contract.contract_type }}</td></tr>
+        <tr><td>Strike Price</td><td>${{ "{:,.2f}".format(contract.strike_price_usd) }} / {{ contract.unit }}</td></tr>
+        <tr><td>Expiry Date</td><td>{{ contract.expiry_date.strftime('%B %d, %Y') }}</td></tr>
+        <tr><td>Seller</td><td>{{ contract.seller_name }}</td></tr>
+      </table>
+
+      <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border-color);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.875rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.07em;">Premium Due</span>
+          <span style="font-family:var(--font-heading); font-size:2rem; font-weight:700; color:var(--accent-cyan);">${{ "{:,.2f}".format(contract.premium_usd) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Panel -->
+    <div class="detail-panel">
+      <div class="card-header">
+        <div class="card-title">Payment Details</div>
+      </div>
+
+      <!-- Stripe Payment -->
+      {% if contract.payment_method in ('STRIPE', 'BOTH') %}
+      <div id="stripe-section">
+        <p class="text-sm text-muted mb-2">Secure card payment powered by Stripe</p>
+        <div id="card-element" style="margin-bottom:1.25rem;"></div>
+        <div id="card-errors" class="alert alert-danger" style="display:none;"></div>
+        <button id="stripe-pay-btn" class="btn btn-primary w-full" style="justify-content:center;" onclick="handleStripePayment({{ contract.id }}, {{ contract.premium_usd }})">
+          💳 Pay ${{ "{:,.2f}".format(contract.premium_usd) }} with Stripe
+        </button>
+      </div>
+      {% endif %}
+
+      {% if contract.payment_method == 'BOTH' %}
+      <div style="text-align:center; padding:1rem 0; color:var(--text-muted); font-size:0.85rem;">— OR —</div>
+      {% endif %}
+
+      <!-- Crypto Payment -->
+      {% if contract.payment_method in ('CRYPTO', 'BOTH') %}
+      <div id="crypto-section">
+        <p class="text-sm text-muted mb-2">Pay with MetaMask or any Ethereum-compatible wallet</p>
+        <button class="btn btn-secondary w-full" style="justify-content:center;" data-action="open-crypto-modal" data-contract-id="{{ contract.id }}">
+          ⚡ Pay with Crypto
+        </button>
+        <div style="margin-top:0.75rem; padding:0.75rem; background:rgba(0,0,0,0.3); border-radius:8px;">
+          <p class="text-xs text-muted">Send the premium of <strong class="text-cyan">${{ "{:,.2f}".format(contract.premium_usd) }}</strong> in ETH/MATIC to seller wallet:</p>
+          <p class="font-mono text-xs text-cyan" style="word-break:break-all; margin-top:0.35rem;">{{ contract.seller_wallet }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--border-color);">
+        <a href="{{ url_for('contract_detail', contract_id=contract.id) }}" class="btn btn-ghost btn-sm">← Back to Contract</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  async function handleStripePayment(contractId, amount) {
+    if (typeof StellarExchange !== 'undefined') {
+      await StellarExchange.initStripeCheckout(contractId, amount);
+    }
+  }
+</script>
+{% endblock %}

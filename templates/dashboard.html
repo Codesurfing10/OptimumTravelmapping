@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Mission Control Dashboard — Stellar Exchange{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+
+  <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h1 class="page-title">Mission Control Dashboard</h1>
+      <p class="page-subtitle">Overview of all contracts and transactions</p>
+    </div>
+    <div class="d-flex gap-1">
+      <a href="{{ url_for('create_contract') }}" class="btn btn-primary btn-sm">+ Create Contract</a>
+      <a href="{{ url_for('marketplace') }}" class="btn btn-ghost btn-sm">Browse Marketplace</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="dash-stats">
+    <div class="dash-stat-card">
+      <div class="dash-stat-value" style="color:var(--accent-cyan);">{{ stats.total }}</div>
+      <div class="dash-stat-label">Total Contracts</div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-value" style="color:var(--accent-green);">{{ stats.open }}</div>
+      <div class="dash-stat-label">Open Contracts</div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-value" style="color:#888;">{{ stats.filled }}</div>
+      <div class="dash-stat-label">Filled Contracts</div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-value" style="color:var(--accent-red);">{{ stats.expired }}</div>
+      <div class="dash-stat-label">Expired Contracts</div>
+    </div>
+  </div>
+
+  <!-- Contracts Table -->
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-between align-center">
+      <div class="card-title">All Listed Contracts</div>
+      <span class="badge badge-category">{{ contracts | length }} total</span>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Strike Price</th>
+            <th>Premium</th>
+            <th>Expiry</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if contracts %}
+            {% for contract in contracts %}
+            <tr>
+              <td class="text-muted">{{ contract.id }}</td>
+              <td class="td-title" style="max-width:220px;">{{ contract.title[:55] }}{% if contract.title|length > 55 %}…{% endif %}</td>
+              <td><span class="badge badge-{{ contract.contract_type | lower }}">{{ contract.contract_type }}</span></td>
+              <td class="text-muted">{{ contract.category.icon_emoji }} {{ contract.category.name }}</td>
+              <td><span class="badge badge-{{ contract.status | lower }}">{{ contract.status }}</span></td>
+              <td class="td-price">${{ "{:,.2f}".format(contract.strike_price_usd) }}</td>
+              <td class="td-price">${{ "{:,.2f}".format(contract.premium_usd) }}</td>
+              <td class="text-muted">{{ contract.expiry_date.strftime('%b %d, %Y') }}</td>
+              <td>
+                <a href="{{ url_for('contract_detail', contract_id=contract.id) }}" class="btn btn-outline btn-sm">View</a>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="9" style="text-align:center; padding:2.5rem; color:var(--text-muted);">
+                No contracts yet. <a href="{{ url_for('create_contract') }}" style="color:var(--accent-cyan);">Create your first contract →</a>
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Transactions Table -->
+  <div class="card">
+    <div class="card-header d-flex justify-between align-center">
+      <div class="card-title">Recent Transactions</div>
+      <span class="badge badge-category">{{ transactions | length }} total</span>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Contract</th>
+            <th>Buyer</th>
+            <th>Amount (USD)</th>
+            <th>Method</th>
+            <th>Tx / Session</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if transactions %}
+            {% for txn in transactions %}
+            <tr>
+              <td class="text-muted">{{ txn.id }}</td>
+              <td>
+                <a href="{{ url_for('contract_detail', contract_id=txn.contract_id) }}" style="color:var(--accent-cyan); text-decoration:none;">
+                  #{{ txn.contract_id }}
+                </a>
+              </td>
+              <td class="td-hash">
+                {% if txn.buyer_wallet %}{{ txn.buyer_wallet[:8] }}…{% elif txn.buyer_email %}{{ txn.buyer_email[:20] }}{% else %}—{% endif %}
+              </td>
+              <td class="td-price">${{ "{:,.2f}".format(txn.amount_usd) }}</td>
+              <td><span class="badge {% if txn.payment_method == 'STRIPE' %}badge-option{% else %}badge-forward{% endif %}">{{ txn.payment_method }}</span></td>
+              <td class="td-hash">
+                {% if txn.tx_hash %}{{ txn.tx_hash[:14] }}…
+                {% elif txn.stripe_session_id %}{{ txn.stripe_session_id[:16] }}…
+                {% else %}—{% endif %}
+              </td>
+              <td><span class="badge badge-{% if txn.status == 'COMPLETED' %}open{% elif txn.status == 'PENDING' %}forward{% else %}expired{% endif %}">{{ txn.status }}</span></td>
+              <td class="text-muted">{{ txn.created_at.strftime('%b %d, %Y') }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="8" style="text-align:center; padding:2.5rem; color:var(--text-muted);">
+                No transactions yet.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

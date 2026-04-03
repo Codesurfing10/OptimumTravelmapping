@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Create Contract — Stellar Exchange{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:780px; padding-top:2rem; padding-bottom:4rem;">
+  <div class="page-header">
+    <h1 class="page-title">List New Contract</h1>
+    <p class="page-subtitle">Create an option or forward contract on a space resource</p>
+  </div>
+
+  <div class="detail-panel">
+    <form id="create-contract-form" method="POST" action="{{ url_for('create_contract') }}">
+
+      <!-- Title -->
+      <div class="form-group">
+        <label class="form-label" for="title">Contract Title *</label>
+        <input type="text" id="title" name="title" class="form-input" required
+               placeholder="e.g. Lunar Water Ice Option — Shackleton Crater" />
+      </div>
+
+      <!-- Category & Type -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="category-select">Resource Category *</label>
+          <select id="category-select" name="category_id" class="form-select" required>
+            <option value="">— Select a category —</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" data-slug="{{ cat.slug }}" data-unit="{{ cat.unit }}">{{ cat.icon_emoji }} {{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contract Type *</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="contract_type" value="OPTION" checked /> Option
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="contract_type" value="FORWARD" /> Forward
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Market price preview -->
+      <div id="price-preview">
+        <span class="text-xs text-muted">Current Market Price:</span>
+        <div class="preview-price">—</div>
+        <span class="text-xs text-muted">Unit: <span id="unit-display">—</span></span>
+      </div>
+
+      <!-- Quantity & Strike -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="resource_quantity">Resource Quantity *</label>
+          <input type="number" id="resource_quantity" name="resource_quantity" class="form-input"
+                 step="0.01" min="0.01" required placeholder="e.g. 50" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="strike_price_usd">Strike Price (USD per unit) *</label>
+          <input type="number" id="strike_price_usd" name="strike_price_usd" class="form-input"
+                 step="0.01" min="0.01" required placeholder="e.g. 480.00" />
+        </div>
+      </div>
+
+      <!-- Premium & Expiry -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="premium_usd">Premium (USD total) *</label>
+          <input type="number" id="premium_usd" name="premium_usd" class="form-input"
+                 step="0.01" min="0" required placeholder="e.g. 2400.00" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="expiry_date">Expiry Date *</label>
+          <input type="date" id="expiry_date" name="expiry_date" class="form-input" required />
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="form-group">
+        <label class="form-label">Accepted Payment Methods *</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="payment_method" value="BOTH" checked /> Both (Stripe + Crypto)
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="payment_method" value="STRIPE" /> Stripe Only
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="payment_method" value="CRYPTO" /> Crypto Only
+          </label>
+        </div>
+      </div>
+
+      <!-- Seller Info -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="seller_name">Seller / Company Name *</label>
+          <input type="text" id="seller_name" name="seller_name" class="form-input" required
+                 placeholder="e.g. AriaMoon Resources LLC" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="seller_wallet">Seller Wallet Address *</label>
+          <input type="text" id="seller_wallet" name="seller_wallet" class="form-input" required
+                 placeholder="0x..." />
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label" for="description">Description</label>
+        <textarea id="description" name="description" class="form-textarea"
+                  placeholder="Describe the contract terms, resource details, and any special conditions..."></textarea>
+      </div>
+
+      <!-- Submit -->
+      <div class="d-flex gap-2 align-center" style="margin-top:0.5rem;">
+        <button type="submit" class="btn btn-primary btn-lg">🚀 List Contract</button>
+        <a href="{{ url_for('marketplace') }}" class="btn btn-ghost">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

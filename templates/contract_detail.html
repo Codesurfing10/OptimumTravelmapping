@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}{{ contract.title }} — Stellar Exchange{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+
+  <!-- Breadcrumb -->
+  <nav style="margin-bottom:1.5rem; font-size:0.85rem; color:var(--text-muted);">
+    <a href="{{ url_for('marketplace') }}" style="color:var(--text-muted); text-decoration:none;">Marketplace</a>
+    <span style="margin:0 0.5rem;">›</span>
+    <a href="{{ url_for('category_detail', slug=contract.category.slug) }}" style="color:var(--text-muted); text-decoration:none;">{{ contract.category.name }}</a>
+    <span style="margin:0 0.5rem;">›</span>
+    <span style="color:var(--text-secondary);">{{ contract.title[:60] }}{% if contract.title|length > 60 %}…{% endif %}</span>
+  </nav>
+
+  <div class="contract-detail-grid">
+
+    <!-- ===== MAIN PANEL ===== -->
+    <div>
+      <div class="detail-panel">
+        <div class="contract-badges mb-2">
+          <span class="badge badge-{{ contract.contract_type | lower }}">{{ contract.contract_type }}</span>
+          <span class="badge badge-{{ contract.status | lower }}">{{ contract.status }}</span>
+          <span class="badge badge-category">{{ contract.category.icon_emoji }} {{ contract.category.name }}</span>
+        </div>
+        <h1 class="detail-title">{{ contract.title }}</h1>
+        {% if contract.description %}
+        <p style="color:var(--text-secondary); line-height:1.7; margin-bottom:1.5rem;">{{ contract.description }}</p>
+        {% endif %}
+
+        <!-- Price Comparison -->
+        <div class="price-comparison">
+          <div class="price-box">
+            <div class="price-box-label">Strike Price (per {{ contract.unit }})</div>
+            <div class="price-box-value strike">${{ "{:,.2f}".format(contract.strike_price_usd) }}</div>
+          </div>
+          <div class="price-box">
+            <div class="price-box-label">Current Market Price</div>
+            <div class="price-box-value market" data-market-slug="{{ contract.category.slug }}">${{ "{:,.2f}".format(contract.current_market_price_usd) }}</div>
+          </div>
+        </div>
+        {% if contract.contract_type == 'OPTION' %}
+        {% if contract.strike_price_usd < contract.current_market_price_usd %}
+        <div class="money-indicator in-the-money">✅ In the Money — Strike is below current market price</div>
+        {% else %}
+        <div class="money-indicator out-the-money">⚠️ Out of the Money — Strike is above current market price</div>
+        {% endif %}
+        {% endif %}
+
+        <!-- Terms Table -->
+        <div class="card-header" style="margin-top:1.5rem; margin-bottom:1rem;">
+          <div class="card-title">Contract Terms</div>
+        </div>
+        <table class="terms-table">
+          <tr><td>Contract Type</td><td>{{ contract.contract_type }}</td></tr>
+          <tr><td>Resource</td><td>{{ contract.category.name }}</td></tr>
+          <tr><td>Quantity</td><td>{{ "{:,.2f}".format(contract.resource_quantity) }} {{ contract.unit }}</td></tr>
+          <tr><td>Strike Price</td><td>${{ "{:,.2f}".format(contract.strike_price_usd) }} / {{ contract.unit }}</td></tr>
+          <tr><td>Total Value</td><td>${{ "{:,.2f}".format(contract.strike_price_usd * contract.resource_quantity) }}</td></tr>
+          <tr><td>Premium</td><td>${{ "{:,.2f}".format(contract.premium_usd) }}</td></tr>
+          <tr><td>Expiry Date</td><td>{{ contract.expiry_date.strftime('%B %d, %Y') }}</td></tr>
+          <tr><td>Payment Methods</td><td>{{ contract.payment_method }}</td></tr>
+          <tr><td>Status</td><td><span class="badge badge-{{ contract.status | lower }}">{{ contract.status }}</span></td></tr>
+          <tr><td>Listed</td><td>{{ contract.created_at.strftime('%B %d, %Y') }}</td></tr>
+        </table>
+
+        <!-- Seller Info -->
+        <div class="card-header" style="margin-top:1.5rem; margin-bottom:1rem;">
+          <div class="card-title">Seller Information</div>
+        </div>
+        <p style="margin-bottom:0.5rem;"><strong style="color:var(--text-secondary); font-size:0.8rem;">NAME</strong><br>{{ contract.seller_name }}</p>
+        <p><strong style="color:var(--text-secondary); font-size:0.8rem;">WALLET ADDRESS</strong><br>
+          <span class="wallet-address">{{ contract.seller_wallet }}</span></p>
+      </div>
+    </div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="purchase-panel">
+
+      <!-- Purchase Card -->
+      <div class="detail-panel mb-2">
+        <div class="card-header">
+          <div class="card-title">Execute Contract</div>
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <div class="text-xs text-muted mb-1">Premium to Pay</div>
+          <div style="font-family:var(--font-heading); font-size:2rem; font-weight:700; color:var(--accent-cyan);">
+            ${{ "{:,.2f}".format(contract.premium_usd) }}
+          </div>
+        </div>
+        {% if contract.status == 'OPEN' %}
+        <div class="purchase-actions">
+          {% if contract.payment_method in ('STRIPE', 'BOTH') %}
+          <button class="btn btn-primary" data-action="stripe-checkout" data-contract-id="{{ contract.id }}" data-amount="{{ contract.premium_usd }}">
+            💳 Pay with Stripe
+          </button>
+          {% endif %}
+          {% if contract.payment_method in ('CRYPTO', 'BOTH') %}
+          <button class="btn btn-secondary" data-action="open-crypto-modal" data-contract-id="{{ contract.id }}">
+            ⚡ Pay with Crypto
+          </button>
+          {% endif %}
+          <a href="{{ url_for('checkout', contract_id=contract.id) }}" class="btn btn-ghost btn-sm">Checkout Page →</a>
+        </div>
+        {% elif contract.status == 'FILLED' %}
+        <div class="alert alert-info">This contract has been filled.</div>
+        {% elif contract.status == 'EXPIRED' %}
+        <div class="alert alert-danger">This contract has expired.</div>
+        {% endif %}
+      </div>
+
+      <!-- Related Contracts -->
+      {% if related %}
+      <div class="detail-panel">
+        <div class="card-header">
+          <div class="card-title">Related Contracts</div>
+        </div>
+        {% for r in related %}
+        <div style="padding:0.75rem 0; border-bottom:1px solid var(--border-color);">
+          <div class="contract-badges mb-1">
+            <span class="badge badge-{{ r.contract_type | lower }}">{{ r.contract_type }}</span>
+          </div>
+          <div style="font-size:0.85rem; font-weight:600; color:var(--text-primary); margin-bottom:0.25rem;">{{ r.title[:60] }}{% if r.title|length > 60 %}…{% endif %}</div>
+          <div style="font-size:0.8rem; color:var(--accent-cyan);">Premium: ${{ "{:,.2f}".format(r.premium_usd) }}</div>
+          <a href="{{ url_for('contract_detail', contract_id=r.id) }}" class="btn btn-ghost btn-sm" style="margin-top:0.5rem;">View →</a>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

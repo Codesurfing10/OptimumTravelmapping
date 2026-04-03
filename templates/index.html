@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Stellar Exchange — Trade Space Resource Contracts{% endblock %}
+
+{% block content %}
+
+<!-- ======= HERO ======= -->
+<section class="hero">
+  <div class="container">
+    <p class="hero-eyebrow">Next-Generation Commodity Markets</p>
+    <h1 class="hero-title">Trade the Future of<br>Space Resources</h1>
+    <p class="hero-subtitle">
+      Buy and sell option and forward contracts on Helium-3, Lunar Water Ice,
+      Platinum Group Metals, and more — the commodities that will power humanity's expansion into the cosmos.
+    </p>
+    <div class="hero-cta">
+      <a href="{{ url_for('marketplace') }}" class="btn btn-primary btn-xl">Browse Marketplace</a>
+      <a href="{{ url_for('create_contract') }}" class="btn btn-outline btn-xl">List a Contract</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======= TICKER BAR ======= -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="ticker-track">
+    {% for cat in categories %}
+    <div class="ticker-item">
+      <span>{{ cat.icon_emoji }}</span>
+      <span class="ticker-name">{{ cat.name }}</span>
+      <span class="ticker-price" data-ticker-slug="{{ cat.slug }}" data-ticker-field="price">${{ "{:,.2f}".format(cat.current_price_usd) }}</span>
+      <span class="ticker-change {% if cat.price_change_24h >= 0 %}up{% else %}down{% endif %}"
+            data-ticker-slug="{{ cat.slug }}" data-ticker-field="change">
+        {% if cat.price_change_24h >= 0 %}▲{% else %}▼{% endif %}{{ "{:.2f}".format(cat.price_change_24h | abs) }}%
+      </span>
+    </div>
+    {% endfor %}
+    <!-- Duplicate for seamless loop -->
+    {% for cat in categories %}
+    <div class="ticker-item">
+      <span>{{ cat.icon_emoji }}</span>
+      <span class="ticker-name">{{ cat.name }}</span>
+      <span class="ticker-price">${{ "{:,.2f}".format(cat.current_price_usd) }}</span>
+      <span class="ticker-change {% if cat.price_change_24h >= 0 %}up{% else %}down{% endif %}">
+        {% if cat.price_change_24h >= 0 %}▲{% else %}▼{% endif %}{{ "{:.2f}".format(cat.price_change_24h | abs) }}%
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ======= STATS BAR ======= -->
+<div class="container">
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-value">{{ stats.total_contracts }}</span>
+      <span class="stat-label">Total Contracts</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">{{ stats.open_options }}</span>
+      <span class="stat-label">Active Options</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">{{ stats.open_forwards }}</span>
+      <span class="stat-label">Forward Contracts</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">${{ "{:,.0f}".format(stats.total_volume) }}</span>
+      <span class="stat-label">Total Volume (USD)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ======= FEATURED CONTRACTS ======= -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Featured Contracts</h2>
+      <p class="section-subtitle">Hand-picked open contracts ready for immediate purchase</p>
+    </div>
+    {% if featured %}
+    <div class="grid-3">
+      {% for contract in featured %}
+      <div class="contract-card">
+        <div class="contract-card-header">
+          <div>
+            <div class="contract-badges mb-1">
+              <span class="badge badge-{{ contract.contract_type | lower }}">{{ contract.contract_type }}</span>
+              <span class="badge badge-{{ contract.status | lower }}">{{ contract.status }}</span>
+            </div>
+            <div class="contract-card-title">{{ contract.title }}</div>
+          </div>
+          <span style="font-size:1.75rem;">{{ contract.category.icon_emoji }}</span>
+        </div>
+        <div class="contract-meta">
+          <div class="meta-item">
+            <div class="meta-label">Resource</div>
+            <div class="meta-value">{{ "{:,.1f}".format(contract.resource_quantity) }} {{ contract.unit }}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Strike Price</div>
+            <div class="meta-value price">${{ "{:,.2f}".format(contract.strike_price_usd) }}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Premium</div>
+            <div class="meta-value premium">${{ "{:,.2f}".format(contract.premium_usd) }}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Expires</div>
+            <div class="meta-value">{{ contract.expiry_date.strftime('%b %d, %Y') }}</div>
+          </div>
+        </div>
+        <div class="contract-actions">
+          <a href="{{ url_for('contract_detail', contract_id=contract.id) }}" class="btn btn-outline btn-sm">View Details</a>
+          {% if contract.payment_method in ('STRIPE', 'BOTH') %}
+          <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="{{ contract.id }}" data-amount="{{ contract.premium_usd }}">Pay with Stripe</button>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div style="text-align:center; margin-top:2rem;">
+      <a href="{{ url_for('marketplace') }}" class="btn btn-ghost">View All Contracts →</a>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <div class="empty-title">No contracts available yet</div>
+      <a href="{{ url_for('create_contract') }}" class="btn btn-primary mt-2">Create First Contract</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ======= RESOURCE CATEGORIES ======= -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Space Resource Categories</h2>
+      <p class="section-subtitle">Eight critical resources powering the cislunar economy</p>
+    </div>
+    <div class="grid-4">
+      {% for cat in categories %}
+      <a href="{{ url_for('category_detail', slug=cat.slug) }}" class="category-card">
+        <span class="category-emoji">{{ cat.icon_emoji }}</span>
+        <div class="category-name">{{ cat.name }}</div>
+        <div class="category-price">${{ "{:,.2f}".format(cat.current_price_usd) }}</div>
+        <div class="category-unit">per {{ cat.unit }}</div>
+        <div class="category-change {% if cat.price_change_24h >= 0 %}up{% else %}down{% endif %}">
+          {% if cat.price_change_24h >= 0 %}▲ +{% else %}▼ {% endif %}{{ "{:.2f}".format(cat.price_change_24h) }}% (24h)
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ======= HOW IT WORKS ======= -->
+<section class="section" style="background:rgba(0,0,0,0.3); padding:4rem 0;">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">Execute space resource contracts in three simple steps</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-number">01</span>
+        <div class="step-title">Browse Contracts</div>
+        <p class="step-desc">Explore options and forward contracts across 8 space resource categories. Filter by type, price, and expiry date.</p>
+      </div>
+      <div class="step">
+        <span class="step-number">02</span>
+        <div class="step-title">Select & Review</div>
+        <p class="step-desc">Analyze contract terms, compare strike price vs market price, and review seller credentials before committing.</p>
+      </div>
+      <div class="step">
+        <span class="step-number">03</span>
+        <div class="step-title">Execute Contract</div>
+        <p class="step-desc">Pay the premium via Stripe credit card or MetaMask crypto wallet. Your contract is instantly recorded on-chain.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

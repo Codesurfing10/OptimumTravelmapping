@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Space Resource Categories — Stellar Exchange{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">Space Resource Categories</h1>
+    <p class="page-subtitle">Eight critical commodities driving the cislunar and deep-space economy</p>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:4rem;">
+    {% for cat in categories %}
+    <a href="{{ url_for('category_detail', slug=cat.slug) }}" class="category-card">
+      <span class="category-emoji">{{ cat.icon_emoji }}</span>
+      <div class="category-name">{{ cat.name }}</div>
+      <div class="category-price">${{ "{:,.2f}".format(cat.current_price_usd) }}</div>
+      <div class="category-unit">per {{ cat.unit }}</div>
+      <div class="category-change {% if cat.price_change_24h >= 0 %}up{% else %}down{% endif %}">
+        {% if cat.price_change_24h >= 0 %}▲ +{% else %}▼ {% endif %}{{ "{:.2f}".format(cat.price_change_24h) }}% (24h)
+      </div>
+      <div class="category-desc">{{ cat.description[:120] }}{% if cat.description | length > 120 %}…{% endif %}</div>
+      <div style="margin-top:1rem;">
+        <span class="badge badge-category">{{ cat.contracts | length }} contract{{ 's' if cat.contracts | length != 1 }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

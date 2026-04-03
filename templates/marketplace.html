@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Marketplace — Stellar Exchange{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">Contract Marketplace</h1>
+    <p class="page-subtitle">Browse all available space resource contracts</p>
+  </div>
+
+  <!-- FILTERS -->
+  <form id="filter-form" method="GET" action="{{ url_for('marketplace') }}">
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label class="filter-label">Category</label>
+        <select name="category" class="form-select" style="min-width:180px;">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+          <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.icon_emoji }} {{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Contract Type</label>
+        <select name="contract_type" class="form-select">
+          <option value="">All Types</option>
+          <option value="OPTION"  {% if selected_type == 'OPTION'  %}selected{% endif %}>Option</option>
+          <option value="FORWARD" {% if selected_type == 'FORWARD' %}selected{% endif %}>Forward</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Status</label>
+        <select name="status" class="form-select">
+          <option value="">All Statuses</option>
+          <option value="OPEN"    {% if selected_status == 'OPEN'    %}selected{% endif %}>Open</option>
+          <option value="FILLED"  {% if selected_status == 'FILLED'  %}selected{% endif %}>Filled</option>
+          <option value="EXPIRED" {% if selected_status == 'EXPIRED' %}selected{% endif %}>Expired</option>
+        </select>
+      </div>
+      <div class="filter-group" style="align-self:flex-end;">
+        <button type="submit" class="btn btn-primary btn-sm">Apply Filters</button>
+      </div>
+      <div class="filter-group" style="align-self:flex-end;">
+        <button type="button" id="reset-filters" class="btn btn-ghost btn-sm">Reset</button>
+      </div>
+      <div style="margin-left:auto; align-self:flex-end;">
+        <a href="{{ url_for('create_contract') }}" class="btn btn-secondary btn-sm">+ List New Contract</a>
+      </div>
+    </div>
+  </form>
+
+  <!-- RESULTS COUNT -->
+  <p class="text-sm text-muted mb-3">
+    Showing <strong class="text-cyan">{{ contracts | length }}</strong> contract{{ 's' if contracts | length != 1 }}
+    {% if selected_category or selected_type or selected_status %} (filtered){% endif %}
+  </p>
+
+  <!-- CONTRACTS GRID -->
+  {% if contracts %}
+  <div class="grid-3" style="margin-bottom:3rem;">
+    {% for contract in contracts %}
+    <div class="contract-card">
+      <div class="contract-card-header">
+        <div style="flex:1; min-width:0;">
+          <div class="contract-badges mb-1">
+            <span class="badge badge-{{ contract.contract_type | lower }}">{{ contract.contract_type }}</span>
+            <span class="badge badge-{{ contract.status | lower }}">{{ contract.status }}</span>
+            <span class="badge badge-category">{{ contract.category.icon_emoji }} {{ contract.category.name }}</span>
+          </div>
+          <div class="contract-card-title">{{ contract.title }}</div>
+        </div>
+      </div>
+      {% if contract.description %}
+      <p class="text-sm text-muted" style="line-height:1.5;">{{ contract.description[:120] }}{% if contract.description | length > 120 %}…{% endif %}</p>
+      {% endif %}
+      <div class="contract-meta">
+        <div class="meta-item">
+          <div class="meta-label">Quantity</div>
+          <div class="meta-value">{{ "{:,.1f}".format(contract.resource_quantity) }} {{ contract.unit }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Strike Price</div>
+          <div class="meta-value price">${{ "{:,.2f}".format(contract.strike_price_usd) }}/{{ contract.unit }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Premium</div>
+          <div class="meta-value premium">${{ "{:,.2f}".format(contract.premium_usd) }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Expires</div>
+          <div class="meta-value">{{ contract.expiry_date.strftime('%b %d, %Y') }}</div>
+        </div>
+      </div>
+      <div class="text-xs text-muted">Seller: {{ contract.seller_name }}</div>
+      <div class="contract-actions">
+        <a href="{{ url_for('contract_detail', contract_id=contract.id) }}" class="btn btn-outline btn-sm">View Details</a>
+        {% if contract.status == 'OPEN' %}
+          {% if contract.payment_method in ('STRIPE', 'BOTH') %}
+          <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="{{ contract.id }}" data-amount="{{ contract.premium_usd }}">💳 Stripe</button>
+          {% endif %}
+          {% if contract.payment_method in ('CRYPTO', 'BOTH') %}
+          <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="{{ contract.id }}">⚡ Crypto</button>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🔭</div>
+    <div class="empty-title">No contracts found</div>
+    <p class="text-muted text-sm mb-2">Try adjusting your filters or create a new contract.</p>
+    <div class="d-flex gap-2 justify-center" style="justify-content:center;">
+      <button id="reset-filters" class="btn btn-ghost btn-sm">Reset Filters</button>
+      <a href="{{ url_for('create_contract') }}" class="btn btn-primary btn-sm">+ Create Contract</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

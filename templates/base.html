@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Stellar Exchange — Space Resource Contracts{% endblock %}</title>
+  <meta name="description" content="{% block description %}Trade option and forward contracts on space resources including Helium-3, Lunar Water Ice, Platinum Group Metals and more.{% endblock %}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<div class="nebula-bg"></div>
+<div id="starfield"></div>
+
+<div class="page-wrapper">
+
+  <!-- ======= NAVIGATION ======= -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="{{ url_for('index') }}" class="navbar-brand">🚀 STELLAR EXCHANGE</a>
+      <ul class="navbar-nav">
+        <li><a href="{{ url_for('marketplace') }}" class="nav-link {% if request.endpoint == 'marketplace' %}active{% endif %}">Marketplace</a></li>
+        <li><a href="{{ url_for('categories') }}" class="nav-link {% if request.endpoint in ('categories', 'category_detail') %}active{% endif %}">Categories</a></li>
+        <li><a href="{{ url_for('create_contract') }}" class="nav-link btn-nav">+ Create Contract</a></li>
+        <li><a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+        <li><a href="{{ url_for('wallet') }}" class="nav-link {% if request.endpoint == 'wallet' %}active{% endif %}">Wallet</a></li>
+      </ul>
+      <button id="wallet-btn" type="button">🔌 Connect Wallet</button>
+    </div>
+  </nav>
+
+  <!-- ======= FLASH MESSAGES ======= -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="container flash-container">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ======= MAIN CONTENT ======= -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ======= FOOTER ======= -->
+  <footer>
+    <div class="container">
+      <p>© {{ 2025 }} Stellar Exchange. All rights reserved.</p>
+      <p class="tagline">Trading the Resources of Tomorrow's Cosmos</p>
+    </div>
+  </footer>
+
+</div><!-- /.page-wrapper -->
+
+<!-- ======= CRYPTO PURCHASE MODAL ======= -->
+<div class="modal-overlay" id="crypto-modal">
+  <div class="modal">
+    <button class="modal-close" data-action="close-crypto-modal">✕</button>
+    <h3 class="modal-title">⚡ Confirm Crypto Purchase</h3>
+    <input type="hidden" id="crypto-contract-id" value="" />
+    <div class="form-group">
+      <label class="form-label" for="crypto-wallet-input">Your Wallet Address</label>
+      <input type="text" id="crypto-wallet-input" class="form-input" placeholder="0x..." />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="crypto-tx-hash">Transaction Hash</label>
+      <input type="text" id="crypto-tx-hash" class="form-input" placeholder="0x transaction hash..." />
+      <p class="text-xs text-muted mt-1">Send the premium to the seller wallet, then paste your transaction hash here.</p>
+    </div>
+    <div class="d-flex gap-1" style="margin-top:1.5rem;">
+      <button class="btn btn-secondary w-full" data-action="submit-crypto">Confirm Purchase</button>
+      <button class="btn btn-ghost" data-action="close-crypto-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>
