@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Contract — Stellar Exchange</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<div class="nebula-bg"></div>
+<div id="starfield"></div>
+<div class="page-wrapper">
+
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="./index.html" class="navbar-brand">🚀 STELLAR EXCHANGE</a>
+      <ul class="navbar-nav">
+        <li><a href="./marketplace.html" class="nav-link">Marketplace</a></li>
+        <li><a href="./categories.html" class="nav-link">Categories</a></li>
+        <li><a href="./create.html" class="nav-link btn-nav">+ Create Contract</a></li>
+        <li><a href="./dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="./wallet.html" class="nav-link">Wallet</a></li>
+      </ul>
+      <button id="wallet-btn" type="button">🔌 Connect Wallet</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container" style="max-width:780px; padding-top:2rem; padding-bottom:4rem;">
+
+      <div class="alert alert-info" style="margin-bottom:1.5rem;">
+        ℹ️ <strong>Demo Mode:</strong> This is a static preview. Form submissions require the live server.
+      </div>
+
+      <div class="page-header">
+        <h1 class="page-title">List New Contract</h1>
+        <p class="page-subtitle">Create an option or forward contract on a space resource</p>
+      </div>
+
+      <div class="detail-panel">
+        <form id="create-contract-form" action="#" method="POST">
+
+          <!-- Title -->
+          <div class="form-group">
+            <label class="form-label" for="title">Contract Title *</label>
+            <input type="text" id="title" name="title" class="form-input" required
+                   placeholder="e.g. Lunar Water Ice Option — Shackleton Crater" />
+          </div>
+
+          <!-- Category & Type -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="category-select">Resource Category *</label>
+              <select id="category-select" name="category_id" class="form-select" required>
+                <option value="">— Select a category —</option>
+                <option value="1" data-slug="lunar-water-ice" data-unit="tonnes">🌊 Lunar Water Ice</option>
+                <option value="2" data-slug="helium-3" data-unit="kg">⚛️ Helium-3</option>
+                <option value="3" data-slug="lunar-regolith-iron" data-unit="tonnes">🔩 Lunar Regolith Iron</option>
+                <option value="4" data-slug="platinum-group-metals" data-unit="kg">💎 Platinum Group Metals</option>
+                <option value="5" data-slug="titanium-ore" data-unit="tonnes">🪨 Titanium Ore</option>
+                <option value="6" data-slug="rare-earth-elements" data-unit="kg">🌟 Rare Earth Elements</option>
+                <option value="7" data-slug="silicon-solar-grade" data-unit="tonnes">☀️ Silicon (Solar Grade)</option>
+                <option value="8" data-slug="carbon-asteroid" data-unit="tonnes">🌑 Carbon (Asteroid)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contract Type *</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="contract_type" value="OPTION" checked /> Option
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="contract_type" value="FORWARD" /> Forward
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Market price preview -->
+          <div id="price-preview">
+            <span class="text-xs text-muted">Current Market Price:</span>
+            <div class="preview-price">—</div>
+            <span class="text-xs text-muted">Unit: <span id="unit-display">—</span></span>
+          </div>
+
+          <!-- Quantity & Strike -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="resource_quantity">Resource Quantity *</label>
+              <input type="number" id="resource_quantity" name="resource_quantity" class="form-input"
+                     step="0.01" min="0.01" required placeholder="e.g. 50" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="strike_price_usd">Strike Price (USD per unit) *</label>
+              <input type="number" id="strike_price_usd" name="strike_price_usd" class="form-input"
+                     step="0.01" min="0.01" required placeholder="e.g. 480.00" />
+            </div>
+          </div>
+
+          <!-- Premium & Expiry -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="premium_usd">Premium (USD total) *</label>
+              <input type="number" id="premium_usd" name="premium_usd" class="form-input"
+                     step="0.01" min="0" required placeholder="e.g. 2400.00" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expiry_date">Expiry Date *</label>
+              <input type="date" id="expiry_date" name="expiry_date" class="form-input" required />
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div class="form-group">
+            <label class="form-label">Accepted Payment Methods *</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="payment_method" value="BOTH" checked /> Both (Stripe + Crypto)
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="payment_method" value="STRIPE" /> Stripe Only
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="payment_method" value="CRYPTO" /> Crypto Only
+              </label>
+            </div>
+          </div>
+
+          <!-- Seller Info -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="seller_name">Seller / Company Name *</label>
+              <input type="text" id="seller_name" name="seller_name" class="form-input" required
+                     placeholder="e.g. AriaMoon Resources LLC" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="seller_wallet">Seller Wallet Address *</label>
+              <input type="text" id="seller_wallet" name="seller_wallet" class="form-input" required
+                     placeholder="0x..." />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label class="form-label" for="description">Description</label>
+            <textarea id="description" name="description" class="form-textarea"
+                      placeholder="Describe the contract terms, resource details, and any special conditions..."></textarea>
+          </div>
+
+          <!-- Submit -->
+          <div class="d-flex gap-2 align-center" style="margin-top:0.5rem;">
+            <button type="submit" class="btn btn-primary btn-lg">🚀 List Contract</button>
+            <a href="./marketplace.html" class="btn btn-ghost">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Stellar Exchange. All rights reserved.</p>
+      <p class="tagline">Trading the Resources of Tomorrow's Cosmos</p>
+    </div>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="crypto-modal">
+  <div class="modal">
+    <button class="modal-close" data-action="close-crypto-modal">✕</button>
+    <h3 class="modal-title">⚡ Confirm Crypto Purchase</h3>
+    <input type="hidden" id="crypto-contract-id" value="" />
+    <div class="form-group">
+      <label class="form-label" for="crypto-wallet-input">Your Wallet Address</label>
+      <input type="text" id="crypto-wallet-input" class="form-input" placeholder="0x..." />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="crypto-tx-hash">Transaction Hash</label>
+      <input type="text" id="crypto-tx-hash" class="form-input" placeholder="0x transaction hash..." />
+      <p class="text-xs text-muted mt-1">Send the premium to the seller wallet, then paste your transaction hash here.</p>
+    </div>
+    <div class="d-flex gap-1" style="margin-top:1.5rem;">
+      <button class="btn btn-secondary w-full" data-action="submit-crypto">Confirm Purchase</button>
+      <button class="btn btn-ghost" data-action="close-crypto-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="./js/data.js"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stellar Exchange — Trade Space Resource Contracts</title>
+  <meta name="description" content="Trade option and forward contracts on space resources including Helium-3, Lunar Water Ice, Platinum Group Metals and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<div class="nebula-bg"></div>
+<div id="starfield"></div>
+<div class="page-wrapper">
+
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="./index.html" class="navbar-brand">🚀 STELLAR EXCHANGE</a>
+      <ul class="navbar-nav">
+        <li><a href="./marketplace.html" class="nav-link">Marketplace</a></li>
+        <li><a href="./categories.html" class="nav-link">Categories</a></li>
+        <li><a href="./create.html" class="nav-link btn-nav">+ Create Contract</a></li>
+        <li><a href="./dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="./wallet.html" class="nav-link">Wallet</a></li>
+      </ul>
+      <button id="wallet-btn" type="button">🔌 Connect Wallet</button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <p class="hero-eyebrow">Next-Generation Commodity Markets</p>
+        <h1 class="hero-title">Trade the Future of<br>Space Resources</h1>
+        <p class="hero-subtitle">
+          Buy and sell option and forward contracts on Helium-3, Lunar Water Ice,
+          Platinum Group Metals, and more — the commodities that will power humanity's expansion into the cosmos.
+        </p>
+        <div class="hero-cta">
+          <a href="./marketplace.html" class="btn btn-primary btn-xl">Browse Marketplace</a>
+          <a href="./create.html" class="btn btn-outline btn-xl">List a Contract</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TICKER BAR -->
+    <div class="ticker-bar">
+      <div class="ticker-track" id="ticker-track">
+        <div class="ticker-item"><span>🌊</span><span class="ticker-name">Lunar Water Ice</span><span class="ticker-price" data-ticker-slug="lunar-water-ice" data-ticker-field="price">$500.00</span><span class="ticker-change up" data-ticker-slug="lunar-water-ice" data-ticker-field="change">▲+2.40%</span></div>
+        <div class="ticker-item"><span>⚛️</span><span class="ticker-name">Helium-3</span><span class="ticker-price" data-ticker-slug="helium-3" data-ticker-field="price">$40,000.00</span><span class="ticker-change down" data-ticker-slug="helium-3" data-ticker-field="change">▼-1.20%</span></div>
+        <div class="ticker-item"><span>🔩</span><span class="ticker-name">Lunar Regolith Iron</span><span class="ticker-price" data-ticker-slug="lunar-regolith-iron" data-ticker-field="price">$8,000.00</span><span class="ticker-change up" data-ticker-slug="lunar-regolith-iron" data-ticker-field="change">▲+0.80%</span></div>
+        <div class="ticker-item"><span>💎</span><span class="ticker-name">Platinum Group Metals</span><span class="ticker-price" data-ticker-slug="platinum-group-metals" data-ticker-field="price">$35,000.00</span><span class="ticker-change up" data-ticker-slug="platinum-group-metals" data-ticker-field="change">▲+3.10%</span></div>
+        <div class="ticker-item"><span>🪨</span><span class="ticker-name">Titanium Ore</span><span class="ticker-price" data-ticker-slug="titanium-ore" data-ticker-field="price">$12,000.00</span><span class="ticker-change down" data-ticker-slug="titanium-ore" data-ticker-field="change">▼-0.50%</span></div>
+        <div class="ticker-item"><span>🌟</span><span class="ticker-name">Rare Earth Elements</span><span class="ticker-price" data-ticker-slug="rare-earth-elements" data-ticker-field="price">$2,500.00</span><span class="ticker-change up" data-ticker-slug="rare-earth-elements" data-ticker-field="change">▲+1.70%</span></div>
+        <div class="ticker-item"><span>☀️</span><span class="ticker-name">Silicon (Solar Grade)</span><span class="ticker-price" data-ticker-slug="silicon-solar-grade" data-ticker-field="price">$15,000.00</span><span class="ticker-change down" data-ticker-slug="silicon-solar-grade" data-ticker-field="change">▼-2.30%</span></div>
+        <div class="ticker-item"><span>🌑</span><span class="ticker-name">Carbon (Asteroid)</span><span class="ticker-price" data-ticker-slug="carbon-asteroid" data-ticker-field="price">$3,000.00</span><span class="ticker-change up" data-ticker-slug="carbon-asteroid" data-ticker-field="change">▲+0.30%</span></div>
+        <!-- Duplicate for seamless loop -->
+        <div class="ticker-item"><span>🌊</span><span class="ticker-name">Lunar Water Ice</span><span class="ticker-price">$500.00</span><span class="ticker-change up">▲+2.40%</span></div>
+        <div class="ticker-item"><span>⚛️</span><span class="ticker-name">Helium-3</span><span class="ticker-price">$40,000.00</span><span class="ticker-change down">▼-1.20%</span></div>
+        <div class="ticker-item"><span>🔩</span><span class="ticker-name">Lunar Regolith Iron</span><span class="ticker-price">$8,000.00</span><span class="ticker-change up">▲+0.80%</span></div>
+        <div class="ticker-item"><span>💎</span><span class="ticker-name">Platinum Group Metals</span><span class="ticker-price">$35,000.00</span><span class="ticker-change up">▲+3.10%</span></div>
+        <div class="ticker-item"><span>🪨</span><span class="ticker-name">Titanium Ore</span><span class="ticker-price">$12,000.00</span><span class="ticker-change down">▼-0.50%</span></div>
+        <div class="ticker-item"><span>🌟</span><span class="ticker-name">Rare Earth Elements</span><span class="ticker-price">$2,500.00</span><span class="ticker-change up">▲+1.70%</span></div>
+        <div class="ticker-item"><span>☀️</span><span class="ticker-name">Silicon (Solar Grade)</span><span class="ticker-price">$15,000.00</span><span class="ticker-change down">▼-2.30%</span></div>
+        <div class="ticker-item"><span>🌑</span><span class="ticker-name">Carbon (Asteroid)</span><span class="ticker-price">$3,000.00</span><span class="ticker-change up">▲+0.30%</span></div>
+      </div>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="container">
+      <div class="stats-bar">
+        <div class="stat-item"><span class="stat-value">10</span><span class="stat-label">Total Contracts</span></div>
+        <div class="stat-item"><span class="stat-value">3</span><span class="stat-label">Active Options</span></div>
+        <div class="stat-item"><span class="stat-value">5</span><span class="stat-label">Forward Contracts</span></div>
+        <div class="stat-item"><span class="stat-value">$0</span><span class="stat-label">Total Volume (USD)</span></div>
+      </div>
+    </div>
+
+    <!-- FEATURED CONTRACTS -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Featured Contracts</h2>
+          <p class="section-subtitle">Hand-picked open contracts ready for immediate purchase</p>
+        </div>
+        <div class="grid-3">
+
+          <!-- Contract 1 -->
+          <div class="contract-card">
+            <div class="contract-card-header">
+              <div>
+                <div class="contract-badges mb-1">
+                  <span class="badge badge-option">OPTION</span>
+                  <span class="badge badge-open">OPEN</span>
+                </div>
+                <div class="contract-card-title">Lunar Water Ice Option — Shackleton Crater Deposit</div>
+              </div>
+              <span style="font-size:1.75rem;">🌊</span>
+            </div>
+            <div class="contract-meta">
+              <div class="meta-item"><div class="meta-label">Resource</div><div class="meta-value">50.0 tonnes</div></div>
+              <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$480.00</div></div>
+              <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$2,400.00</div></div>
+              <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Jul 02, 2026</div></div>
+            </div>
+            <div class="contract-actions">
+              <a href="./contract/1.html" class="btn btn-outline btn-sm">View Details</a>
+              <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="1" data-amount="2400">💳 Pay with Stripe</button>
+            </div>
+          </div>
+
+          <!-- Contract 2 -->
+          <div class="contract-card">
+            <div class="contract-card-header">
+              <div>
+                <div class="contract-badges mb-1">
+                  <span class="badge badge-forward">FORWARD</span>
+                  <span class="badge badge-open">OPEN</span>
+                </div>
+                <div class="contract-card-title">Helium-3 Forward Contract — 6-Month Delivery</div>
+              </div>
+              <span style="font-size:1.75rem;">⚛️</span>
+            </div>
+            <div class="contract-meta">
+              <div class="meta-item"><div class="meta-label">Resource</div><div class="meta-value">2.5 kg</div></div>
+              <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$39,500.00</div></div>
+              <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$12,000.00</div></div>
+              <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Sep 30, 2026</div></div>
+            </div>
+            <div class="contract-actions">
+              <a href="./contract/2.html" class="btn btn-outline btn-sm">View Details</a>
+            </div>
+          </div>
+
+          <!-- Contract 3 -->
+          <div class="contract-card">
+            <div class="contract-card-header">
+              <div>
+                <div class="contract-badges mb-1">
+                  <span class="badge badge-option">OPTION</span>
+                  <span class="badge badge-open">OPEN</span>
+                </div>
+                <div class="contract-card-title">Platinum Group Metals Option — Psyche-Class Asteroid</div>
+              </div>
+              <span style="font-size:1.75rem;">💎</span>
+            </div>
+            <div class="contract-meta">
+              <div class="meta-item"><div class="meta-label">Resource</div><div class="meta-value">10.0 kg</div></div>
+              <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$34,000.00</div></div>
+              <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$18,500.00</div></div>
+              <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Aug 01, 2026</div></div>
+            </div>
+            <div class="contract-actions">
+              <a href="./contract/3.html" class="btn btn-outline btn-sm">View Details</a>
+              <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="3" data-amount="18500">💳 Pay with Stripe</button>
+            </div>
+          </div>
+
+        </div>
+        <div style="text-align:center; margin-top:2rem;">
+          <a href="./marketplace.html" class="btn btn-ghost">View All Contracts →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESOURCE CATEGORIES -->
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Space Resource Categories</h2>
+          <p class="section-subtitle">Eight critical resources powering the cislunar economy</p>
+        </div>
+        <div class="grid-4">
+          <a href="./category/lunar-water-ice.html" class="category-card">
+            <span class="category-emoji">🌊</span>
+            <div class="category-name">Lunar Water Ice</div>
+            <div class="category-price">$500.00</div>
+            <div class="category-unit">per tonnes</div>
+            <div class="category-change up">▲ +2.40% (24h)</div>
+          </a>
+          <a href="./category/helium-3.html" class="category-card">
+            <span class="category-emoji">⚛️</span>
+            <div class="category-name">Helium-3</div>
+            <div class="category-price">$40,000.00</div>
+            <div class="category-unit">per kg</div>
+            <div class="category-change down">▼ -1.20% (24h)</div>
+          </a>
+          <a href="./category/lunar-regolith-iron.html" class="category-card">
+            <span class="category-emoji">🔩</span>
+            <div class="category-name">Lunar Regolith Iron</div>
+            <div class="category-price">$8,000.00</div>
+            <div class="category-unit">per tonnes</div>
+            <div class="category-change up">▲ +0.80% (24h)</div>
+          </a>
+          <a href="./category/platinum-group-metals.html" class="category-card">
+            <span class="category-emoji">💎</span>
+            <div class="category-name">Platinum Group Metals</div>
+            <div class="category-price">$35,000.00</div>
+            <div class="category-unit">per kg</div>
+            <div class="category-change up">▲ +3.10% (24h)</div>
+          </a>
+          <a href="./category/titanium-ore.html" class="category-card">
+            <span class="category-emoji">🪨</span>
+            <div class="category-name">Titanium Ore</div>
+            <div class="category-price">$12,000.00</div>
+            <div class="category-unit">per tonnes</div>
+            <div class="category-change down">▼ -0.50% (24h)</div>
+          </a>
+          <a href="./category/rare-earth-elements.html" class="category-card">
+            <span class="category-emoji">🌟</span>
+            <div class="category-name">Rare Earth Elements</div>
+            <div class="category-price">$2,500.00</div>
+            <div class="category-unit">per kg</div>
+            <div class="category-change up">▲ +1.70% (24h)</div>
+          </a>
+          <a href="./category/silicon-solar-grade.html" class="category-card">
+            <span class="category-emoji">☀️</span>
+            <div class="category-name">Silicon (Solar Grade)</div>
+            <div class="category-price">$15,000.00</div>
+            <div class="category-unit">per tonnes</div>
+            <div class="category-change down">▼ -2.30% (24h)</div>
+          </a>
+          <a href="./category/carbon-asteroid.html" class="category-card">
+            <span class="category-emoji">🌑</span>
+            <div class="category-name">Carbon (Asteroid)</div>
+            <div class="category-price">$3,000.00</div>
+            <div class="category-unit">per tonnes</div>
+            <div class="category-change up">▲ +0.30% (24h)</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" style="background:rgba(0,0,0,0.3); padding:4rem 0;">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">How It Works</h2>
+          <p class="section-subtitle">Execute space resource contracts in three simple steps</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span class="step-number">01</span>
+            <div class="step-title">Browse Contracts</div>
+            <p class="step-desc">Explore options and forward contracts across 8 space resource categories. Filter by type, price, and expiry date.</p>
+          </div>
+          <div class="step">
+            <span class="step-number">02</span>
+            <div class="step-title">Select &amp; Review</div>
+            <p class="step-desc">Analyze contract terms, compare strike price vs market price, and review seller credentials before committing.</p>
+          </div>
+          <div class="step">
+            <span class="step-number">03</span>
+            <div class="step-title">Execute Contract</div>
+            <p class="step-desc">Pay the premium via Stripe credit card or MetaMask crypto wallet. Your contract is instantly recorded on-chain.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Stellar Exchange. All rights reserved.</p>
+      <p class="tagline">Trading the Resources of Tomorrow's Cosmos</p>
+    </div>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="crypto-modal">
+  <div class="modal">
+    <button class="modal-close" data-action="close-crypto-modal">✕</button>
+    <h3 class="modal-title">⚡ Confirm Crypto Purchase</h3>
+    <input type="hidden" id="crypto-contract-id" value="" />
+    <div class="form-group">
+      <label class="form-label" for="crypto-wallet-input">Your Wallet Address</label>
+      <input type="text" id="crypto-wallet-input" class="form-input" placeholder="0x..." />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="crypto-tx-hash">Transaction Hash</label>
+      <input type="text" id="crypto-tx-hash" class="form-input" placeholder="0x transaction hash..." />
+      <p class="text-xs text-muted mt-1">Send the premium to the seller wallet, then paste your transaction hash here.</p>
+    </div>
+    <div class="d-flex gap-1" style="margin-top:1.5rem;">
+      <button class="btn btn-secondary w-full" data-action="submit-crypto">Confirm Purchase</button>
+      <button class="btn btn-ghost" data-action="close-crypto-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="./js/data.js"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>

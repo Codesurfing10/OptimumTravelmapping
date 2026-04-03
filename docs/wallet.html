@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Wallet — Stellar Exchange</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<div class="nebula-bg"></div>
+<div id="starfield"></div>
+<div class="page-wrapper">
+
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="./index.html" class="navbar-brand">🚀 STELLAR EXCHANGE</a>
+      <ul class="navbar-nav">
+        <li><a href="./marketplace.html" class="nav-link">Marketplace</a></li>
+        <li><a href="./categories.html" class="nav-link">Categories</a></li>
+        <li><a href="./create.html" class="nav-link btn-nav">+ Create Contract</a></li>
+        <li><a href="./dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="./wallet.html" class="nav-link active">Wallet</a></li>
+      </ul>
+      <button id="wallet-btn" type="button">🔌 Connect Wallet</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+      <div class="page-header">
+        <h1 class="page-title">Crypto Wallet</h1>
+        <p class="page-subtitle">Connect your MetaMask wallet to trade with crypto</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+
+        <!-- Connection Panel -->
+        <div>
+          <div class="wallet-connect-box">
+            <div class="wallet-icon">🦊</div>
+            <h2 style="font-family:var(--font-heading); font-size:1.25rem; margin-bottom:0.75rem;">MetaMask Wallet</h2>
+            <p class="text-sm text-muted mb-3">Connect your Ethereum wallet to execute crypto payments on space resource contracts.</p>
+            <button id="connect-wallet-big" class="btn btn-primary btn-lg w-full" style="justify-content:center;">
+              🔌 Connect MetaMask Wallet
+            </button>
+            <div id="wallet-address-display" style="margin-top:1rem;" class="wallet-address text-sm">—</div>
+          </div>
+
+          <!-- Instructions -->
+          <div class="detail-panel">
+            <div class="card-header">
+              <div class="card-title">How to Connect</div>
+            </div>
+            <ol style="padding-left:1.25rem; color:var(--text-secondary); font-size:0.875rem; line-height:2;">
+              <li>Install <a href="https://metamask.io" target="_blank" rel="noopener" style="color:var(--accent-cyan);">MetaMask</a> browser extension</li>
+              <li>Create or import an Ethereum wallet</li>
+              <li>Click the "Connect MetaMask Wallet" button above</li>
+              <li>Approve the connection in the MetaMask popup</li>
+              <li>Your wallet address will appear once connected</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+          <!-- Supported Networks -->
+          <div class="detail-panel">
+            <div class="card-header">
+              <div class="card-title">Supported Networks</div>
+            </div>
+            <div class="table-wrapper">
+              <table class="network-table">
+                <thead>
+                  <tr><th>Network</th><th>Chain ID</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-title">Ethereum Mainnet</td>
+                    <td class="td-hash">1</td>
+                    <td><span class="badge badge-open">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td class="td-title">Polygon (MATIC)</td>
+                    <td class="td-hash">137</td>
+                    <td><span class="badge badge-open">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td class="td-title">Ethereum Goerli (Testnet)</td>
+                    <td class="td-hash">5</td>
+                    <td><span class="badge badge-category">Testnet</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Smart Contract -->
+          <div class="detail-panel">
+            <div class="card-header">
+              <div class="card-title">Smart Contract Address</div>
+            </div>
+            <div class="wallet-address" style="color:var(--text-muted);">Not configured — set SMART_CONTRACT_ADDRESS env variable</div>
+            <p class="text-xs text-muted mt-1">This is the on-chain escrow contract for trade settlement.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Transaction History -->
+      <div style="margin-top:2.5rem;">
+        <div class="d-flex justify-between align-center mb-2">
+          <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--text-primary);">Crypto Transaction History</h2>
+          <span class="badge badge-category">0 records</span>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Contract</th>
+                <th>Buyer Wallet</th>
+                <th>Amount (USD)</th>
+                <th>Tx Hash</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" style="text-align:center; padding:2.5rem; color:var(--text-muted);">
+                  No crypto transactions recorded yet.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Stellar Exchange. All rights reserved.</p>
+      <p class="tagline">Trading the Resources of Tomorrow's Cosmos</p>
+    </div>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="crypto-modal">
+  <div class="modal">
+    <button class="modal-close" data-action="close-crypto-modal">✕</button>
+    <h3 class="modal-title">⚡ Confirm Crypto Purchase</h3>
+    <input type="hidden" id="crypto-contract-id" value="" />
+    <div class="form-group">
+      <label class="form-label" for="crypto-wallet-input">Your Wallet Address</label>
+      <input type="text" id="crypto-wallet-input" class="form-input" placeholder="0x..." />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="crypto-tx-hash">Transaction Hash</label>
+      <input type="text" id="crypto-tx-hash" class="form-input" placeholder="0x transaction hash..." />
+      <p class="text-xs text-muted mt-1">Send the premium to the seller wallet, then paste your transaction hash here.</p>
+    </div>
+    <div class="d-flex gap-1" style="margin-top:1.5rem;">
+      <button class="btn btn-secondary w-full" data-action="submit-crypto">Confirm Purchase</button>
+      <button class="btn btn-ghost" data-action="close-crypto-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="./js/data.js"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>

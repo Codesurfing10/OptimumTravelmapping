@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lunar Water Ice — Stellar Exchange</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div class="nebula-bg"></div>
+<div id="starfield"></div>
+<div class="page-wrapper">
+
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="navbar-brand">🚀 STELLAR EXCHANGE</a>
+      <ul class="navbar-nav">
+        <li><a href="../marketplace.html" class="nav-link">Marketplace</a></li>
+        <li><a href="../categories.html" class="nav-link active">Categories</a></li>
+        <li><a href="../create.html" class="nav-link btn-nav">+ Create Contract</a></li>
+        <li><a href="../dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="../wallet.html" class="nav-link">Wallet</a></li>
+      </ul>
+      <button id="wallet-btn" type="button">🔌 Connect Wallet</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+
+      <!-- Category Header -->
+      <div class="detail-panel mb-3">
+        <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+          <div style="font-size:4rem; line-height:1;">🌊</div>
+          <div style="flex:1; min-width:200px;">
+            <h1 class="page-title" style="margin-bottom:0.25rem;">Lunar Water Ice</h1>
+            <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:0.75rem;">
+              <span style="font-family:var(--font-heading); font-size:1.75rem; color:var(--accent-cyan);">$500.00</span>
+              <span style="font-size:0.9rem; color:var(--text-muted);">per tonnes</span>
+              <span class="text-green" style="font-size:0.9rem; font-weight:600;">▲ +2.40% (24h)</span>
+            </div>
+            <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">Water ice deposits found in permanently shadowed craters near the lunar poles. Essential for life support, rocket propellant, and lunar base operations.</p>
+          </div>
+          <a href="../create.html" class="btn btn-primary">+ List Contract</a>
+        </div>
+      </div>
+
+      <!-- Price Chart Placeholder -->
+      <div class="detail-panel mb-3">
+        <div class="card-header">
+          <div class="card-title">Price History</div>
+        </div>
+        <div class="chart-placeholder">📈 Price Chart Coming Soon</div>
+      </div>
+
+      <!-- Contracts -->
+      <div class="d-flex justify-between align-center mb-2">
+        <h2 class="section-title" style="font-size:1.5rem;">Contracts in Lunar Water Ice</h2>
+        <span class="badge badge-category">2 total</span>
+      </div>
+
+      <div class="grid-3">
+    <div class="contract-card">
+      <div class="contract-card-header">
+        <div>
+          <div class="contract-badges mb-1">
+            <span class="badge badge-option">OPTION</span>
+            <span class="badge badge-open">OPEN</span>
+          </div>
+          <div class="contract-card-title">Lunar Water Ice Option — Shackleton Crater Deposit</div>
+        </div>
+      </div>
+      <div class="contract-meta">
+        <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">50.0 tonnes</div></div>
+        <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$480.00</div></div>
+        <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$2,400.00</div></div>
+        <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Jul 02, 2026</div></div>
+      </div>
+      <div class="contract-actions">
+        <a href="../contract/1.html" class="btn btn-outline btn-sm">View Details</a>
+          <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="1" data-amount="2400.00">💳 Buy</button>
+          <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="1">⚡ Buy</button>
+      </div>
+    </div>
+    <div class="contract-card">
+      <div class="contract-card-header">
+        <div>
+          <div class="contract-badges mb-1">
+            <span class="badge badge-forward">FORWARD</span>
+            <span class="badge badge-open">OPEN</span>
+          </div>
+          <div class="contract-card-title">Lunar Water Ice Forward — Haworth Crater Bulk Supply</div>
+        </div>
+      </div>
+      <div class="contract-meta">
+        <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">500.0 tonnes</div></div>
+        <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$495.00</div></div>
+        <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$15,000.00</div></div>
+        <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Oct 25, 2027</div></div>
+      </div>
+      <div class="contract-actions">
+        <a href="../contract/10.html" class="btn btn-outline btn-sm">View Details</a>
+          <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="10" data-amount="15000.00">💳 Buy</button>
+          <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="10">⚡ Buy</button>
+      </div>
+    </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Stellar Exchange. All rights reserved.</p>
+      <p class="tagline">Trading the Resources of Tomorrow's Cosmos</p>
+    </div>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="crypto-modal">
+  <div class="modal">
+    <button class="modal-close" data-action="close-crypto-modal">✕</button>
+    <h3 class="modal-title">⚡ Confirm Crypto Purchase</h3>
+    <input type="hidden" id="crypto-contract-id" value="" />
+    <div class="form-group">
+      <label class="form-label" for="crypto-wallet-input">Your Wallet Address</label>
+      <input type="text" id="crypto-wallet-input" class="form-input" placeholder="0x..." />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="crypto-tx-hash">Transaction Hash</label>
+      <input type="text" id="crypto-tx-hash" class="form-input" placeholder="0x transaction hash..." />
+      <p class="text-xs text-muted mt-1">Send the premium to the seller wallet, then paste your transaction hash here.</p>
+    </div>
+    <div class="d-flex gap-1" style="margin-top:1.5rem;">
+      <button class="btn btn-secondary w-full" data-action="submit-crypto">Confirm Purchase</button>
+      <button class="btn btn-ghost" data-action="close-crypto-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="../js/data.js"></script>
+<script src="../js/main.js"></script>
+</body>
+</html>

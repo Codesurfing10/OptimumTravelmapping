@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketplace — Stellar Exchange</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<div class="nebula-bg"></div>
+<div id="starfield"></div>
+<div class="page-wrapper">
+
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="./index.html" class="navbar-brand">🚀 STELLAR EXCHANGE</a>
+      <ul class="navbar-nav">
+        <li><a href="./marketplace.html" class="nav-link active">Marketplace</a></li>
+        <li><a href="./categories.html" class="nav-link">Categories</a></li>
+        <li><a href="./create.html" class="nav-link btn-nav">+ Create Contract</a></li>
+        <li><a href="./dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="./wallet.html" class="nav-link">Wallet</a></li>
+      </ul>
+      <button id="wallet-btn" type="button">🔌 Connect Wallet</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">Contract Marketplace</h1>
+        <p class="page-subtitle">Browse all available space resource contracts</p>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label class="filter-label">Category</label>
+          <select id="filter-category" class="form-select" style="min-width:180px;">
+            <option value="">All Categories</option>
+            <option value="lunar-water-ice">🌊 Lunar Water Ice</option>
+            <option value="helium-3">⚛️ Helium-3</option>
+            <option value="lunar-regolith-iron">🔩 Lunar Regolith Iron</option>
+            <option value="platinum-group-metals">💎 Platinum Group Metals</option>
+            <option value="titanium-ore">🪨 Titanium Ore</option>
+            <option value="rare-earth-elements">🌟 Rare Earth Elements</option>
+            <option value="silicon-solar-grade">☀️ Silicon (Solar Grade)</option>
+            <option value="carbon-asteroid">🌑 Carbon (Asteroid)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Contract Type</label>
+          <select id="filter-type" class="form-select">
+            <option value="">All Types</option>
+            <option value="OPTION">Option</option>
+            <option value="FORWARD">Forward</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Status</label>
+          <select id="filter-status" class="form-select">
+            <option value="">All Statuses</option>
+            <option value="OPEN">Open</option>
+            <option value="FILLED">Filled</option>
+            <option value="EXPIRED">Expired</option>
+          </select>
+        </div>
+        <div class="filter-group" style="align-self:flex-end;">
+          <button type="button" id="apply-filters" class="btn btn-primary btn-sm">Apply Filters</button>
+        </div>
+        <div class="filter-group" style="align-self:flex-end;">
+          <button type="button" id="reset-filters" class="btn btn-ghost btn-sm">Reset</button>
+        </div>
+        <div style="margin-left:auto; align-self:flex-end;">
+          <a href="./create.html" class="btn btn-secondary btn-sm">+ List New Contract</a>
+        </div>
+      </div>
+
+      <p class="text-sm text-muted mb-3">
+        Showing <strong class="text-cyan" id="results-count">10</strong> contracts
+      </p>
+
+      <div class="grid-3" style="margin-bottom:3rem;">
+
+        <!-- Contract 1 -->
+        <div data-category="lunar-water-ice" data-type="OPTION" data-status="OPEN" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-option">OPTION</span>
+                <span class="badge badge-open">OPEN</span>
+                <span class="badge badge-category">🌊 Lunar Water Ice</span>
+              </div>
+              <div class="contract-card-title">Lunar Water Ice Option — Shackleton Crater Deposit</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">Call option on 50 tonnes of confirmed Shackleton Crater water ice. Strike set 4% below current market…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">50.0 tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$480.00/tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$2,400.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Jul 02, 2026</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: AriaMoon Resources LLC</div>
+          <div class="contract-actions">
+            <a href="./contract/1.html" class="btn btn-outline btn-sm">View Details</a>
+            <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="1" data-amount="2400">💳 Stripe</button>
+            <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="1">⚡ Crypto</button>
+          </div>
+        </div>
+
+        <!-- Contract 2 -->
+        <div data-category="helium-3" data-type="FORWARD" data-status="OPEN" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-forward">FORWARD</span>
+                <span class="badge badge-open">OPEN</span>
+                <span class="badge badge-category">⚛️ Helium-3</span>
+              </div>
+              <div class="contract-card-title">Helium-3 Forward Contract — 6-Month Delivery</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">Forward delivery of 2.5 kg He-3 from Oceanus Procellarum mining operation. Fixed-price certainty for…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">2.5 kg</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$39,500.00/kg</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$12,000.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Sep 30, 2026</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: FusionFrontier Trading</div>
+          <div class="contract-actions">
+            <a href="./contract/2.html" class="btn btn-outline btn-sm">View Details</a>
+            <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="2">⚡ Crypto</button>
+          </div>
+        </div>
+
+        <!-- Contract 3 -->
+        <div data-category="platinum-group-metals" data-type="OPTION" data-status="OPEN" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-option">OPTION</span>
+                <span class="badge badge-open">OPEN</span>
+                <span class="badge badge-category">💎 Platinum Group Metals</span>
+              </div>
+              <div class="contract-card-title">Platinum Group Metals Option — Psyche-Class Asteroid</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">Option to purchase 10 kg of mixed PGM concentrate extracted from a Psyche-class metallic asteroid…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">10.0 kg</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$34,000.00/kg</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$18,500.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Aug 01, 2026</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: AsteroidVault Inc.</div>
+          <div class="contract-actions">
+            <a href="./contract/3.html" class="btn btn-outline btn-sm">View Details</a>
+            <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="3" data-amount="18500">💳 Stripe</button>
+            <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="3">⚡ Crypto</button>
+          </div>
+        </div>
+
+        <!-- Contract 4 -->
+        <div data-category="lunar-regolith-iron" data-type="FORWARD" data-status="OPEN" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-forward">FORWARD</span>
+                <span class="badge badge-open">OPEN</span>
+                <span class="badge badge-category">🔩 Lunar Regolith Iron</span>
+              </div>
+              <div class="contract-card-title">Lunar Regolith Iron Forward — Mare Tranquillitatis</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">Guaranteed forward delivery of 200 tonnes of ISRU-refined iron from Mare Tranquillitatis. Certified for…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">200.0 tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$7,800.00/tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$5,000.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Dec 29, 2026</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: SeleneSteel Co.</div>
+          <div class="contract-actions">
+            <a href="./contract/4.html" class="btn btn-outline btn-sm">View Details</a>
+            <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="4" data-amount="5000">💳 Stripe</button>
+          </div>
+        </div>
+
+        <!-- Contract 5 -->
+        <div data-category="rare-earth-elements" data-type="OPTION" data-status="OPEN" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-option">OPTION</span>
+                <span class="badge badge-open">OPEN</span>
+                <span class="badge badge-category">🌟 Rare Earth Elements</span>
+              </div>
+              <div class="contract-card-title">Rare Earth Elements Option — Lunar Highlands</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">Call option on 500 kg of mixed rare earth concentrate including Nd, Dy, and Eu fractions. Positioned…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">500.0 kg</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$2,450.00/kg</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$8,750.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Jun 02, 2026</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: LunarLanthanides Ltd.</div>
+          <div class="contract-actions">
+            <a href="./contract/5.html" class="btn btn-outline btn-sm">View Details</a>
+            <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="5" data-amount="8750">💳 Stripe</button>
+            <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="5">⚡ Crypto</button>
+          </div>
+        </div>
+
+        <!-- Contract 6 -->
+        <div data-category="silicon-solar-grade" data-type="FORWARD" data-status="OPEN" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-forward">FORWARD</span>
+                <span class="badge badge-open">OPEN</span>
+                <span class="badge badge-category">☀️ Silicon (Solar Grade)</span>
+              </div>
+              <div class="contract-card-title">Solar-Grade Silicon Forward — Regolith Refinery Alpha</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">One-year forward on 30 tonnes of 99.999% pure solar-grade silicon produced at Refinery Alpha…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">30.0 tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$14,800.00/tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$9,000.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Apr 03, 2027</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: SolarScape Industries</div>
+          <div class="contract-actions">
+            <a href="./contract/6.html" class="btn btn-outline btn-sm">View Details</a>
+            <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="6">⚡ Crypto</button>
+          </div>
+        </div>
+
+        <!-- Contract 7 -->
+        <div data-category="titanium-ore" data-type="OPTION" data-status="FILLED" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-option">OPTION</span>
+                <span class="badge badge-filled">FILLED</span>
+                <span class="badge badge-category">🪨 Titanium Ore</span>
+              </div>
+              <div class="contract-card-title">Titanium Ore Option — Copernicus Impact Basin</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">FILLED — Call option on 75 tonnes ilmenite-rich titanium ore from Copernicus Basin high-grade seam…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">75.0 tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$11,500.00/tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$6,200.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Aug 31, 2026</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: TitanQuest Mining</div>
+          <div class="contract-actions">
+            <a href="./contract/7.html" class="btn btn-outline btn-sm">View Details</a>
+          </div>
+        </div>
+
+        <!-- Contract 8 -->
+        <div data-category="carbon-asteroid" data-type="FORWARD" data-status="OPEN" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-forward">FORWARD</span>
+                <span class="badge badge-open">OPEN</span>
+                <span class="badge badge-category">🌑 Carbon (Asteroid)</span>
+              </div>
+              <div class="contract-card-title">Carbon (Asteroid) Forward — Ryugu Sample Return Program</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">Forward on 150 tonnes of carbonaceous chondrite material sourced from Ryugu-class asteroid intercept…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">150.0 tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$3,100.00/tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$3,500.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Oct 20, 2026</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: CarbonCosmos Trading</div>
+          <div class="contract-actions">
+            <a href="./contract/8.html" class="btn btn-outline btn-sm">View Details</a>
+            <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="8" data-amount="3500">💳 Stripe</button>
+          </div>
+        </div>
+
+        <!-- Contract 9 -->
+        <div data-category="helium-3" data-type="OPTION" data-status="EXPIRED" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-option">OPTION</span>
+                <span class="badge badge-expired">EXPIRED</span>
+                <span class="badge badge-category">⚛️ Helium-3</span>
+              </div>
+              <div class="contract-card-title">Helium-3 Option — Aristarchus Plateau Hotspot</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">EXPIRED — Short-dated call option on 1 kg He-3 from Aristarchus Plateau high-flux zone. Contract…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">1.0 kg</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$41,000.00/kg</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$5,500.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">May 03, 2026</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: FusionFrontier Trading</div>
+          <div class="contract-actions">
+            <a href="./contract/9.html" class="btn btn-outline btn-sm">View Details</a>
+          </div>
+        </div>
+
+        <!-- Contract 10 -->
+        <div data-category="lunar-water-ice" data-type="FORWARD" data-status="OPEN" class="contract-card">
+          <div class="contract-card-header">
+            <div style="flex:1; min-width:0;">
+              <div class="contract-badges mb-1">
+                <span class="badge badge-forward">FORWARD</span>
+                <span class="badge badge-open">OPEN</span>
+                <span class="badge badge-category">🌊 Lunar Water Ice</span>
+              </div>
+              <div class="contract-card-title">Lunar Water Ice Forward — Haworth Crater Bulk Supply</div>
+            </div>
+          </div>
+          <p class="text-sm text-muted" style="line-height:1.5;">Bulk 18-month forward for 500 tonnes of processed water ice from Haworth Crater extraction facility…</p>
+          <div class="contract-meta">
+            <div class="meta-item"><div class="meta-label">Quantity</div><div class="meta-value">500.0 tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Strike Price</div><div class="meta-value price">$495.00/tonnes</div></div>
+            <div class="meta-item"><div class="meta-label">Premium</div><div class="meta-value premium">$15,000.00</div></div>
+            <div class="meta-item"><div class="meta-label">Expires</div><div class="meta-value">Oct 25, 2027</div></div>
+          </div>
+          <div class="text-xs text-muted">Seller: PolarDawn Logistics</div>
+          <div class="contract-actions">
+            <a href="./contract/10.html" class="btn btn-outline btn-sm">View Details</a>
+            <button class="btn btn-primary btn-sm" data-action="stripe-checkout" data-contract-id="10" data-amount="15000">💳 Stripe</button>
+            <button class="btn btn-secondary btn-sm" data-action="open-crypto-modal" data-contract-id="10">⚡ Crypto</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Stellar Exchange. All rights reserved.</p>
+      <p class="tagline">Trading the Resources of Tomorrow's Cosmos</p>
+    </div>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="crypto-modal">
+  <div class="modal">
+    <button class="modal-close" data-action="close-crypto-modal">✕</button>
+    <h3 class="modal-title">⚡ Confirm Crypto Purchase</h3>
+    <input type="hidden" id="crypto-contract-id" value="" />
+    <div class="form-group">
+      <label class="form-label" for="crypto-wallet-input">Your Wallet Address</label>
+      <input type="text" id="crypto-wallet-input" class="form-input" placeholder="0x..." />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="crypto-tx-hash">Transaction Hash</label>
+      <input type="text" id="crypto-tx-hash" class="form-input" placeholder="0x transaction hash..." />
+      <p class="text-xs text-muted mt-1">Send the premium to the seller wallet, then paste your transaction hash here.</p>
+    </div>
+    <div class="d-flex gap-1" style="margin-top:1.5rem;">
+      <button class="btn btn-secondary w-full" data-action="submit-crypto">Confirm Purchase</button>
+      <button class="btn btn-ghost" data-action="close-crypto-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="./js/data.js"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>
