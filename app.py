@@ -370,8 +370,8 @@ def create_contract():
             db.session.commit()
             flash('Contract created successfully!', 'success')
             return redirect(url_for('contract_detail', contract_id=contract.id))
-        except Exception as e:
-            flash(f'Error creating contract: {str(e)}', 'danger')
+        except Exception:
+            flash('Error creating contract. Please check your inputs and try again.', 'danger')
 
     return render_template('create_contract.html', categories=categories)
 
@@ -451,8 +451,8 @@ def create_checkout_session():
         db.session.commit()
 
         return jsonify({'url': session.url})
-    except stripe.error.StripeError as e:
-        return jsonify({'error': str(e)}), 400
+    except stripe.error.StripeError:
+        return jsonify({'error': 'Payment processing failed. Please try again.'}), 400
 
 
 @app.route('/api/payment-success', methods=['POST'])
@@ -466,8 +466,8 @@ def payment_success_webhook():
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, webhook_secret)
-    except (ValueError, stripe.error.SignatureVerificationError) as e:
-        return jsonify({'error': str(e)}), 400
+    except (ValueError, stripe.error.SignatureVerificationError):
+        return jsonify({'error': 'Invalid webhook signature'}), 400
 
     if event['type'] == 'checkout.session.completed':
         session_obj = event['data']['object']
@@ -525,8 +525,10 @@ def api_create_contract():
         db.session.add(contract)
         db.session.commit()
         return jsonify(contract.to_dict()), 201
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
+    except (KeyError, ValueError):
+        return jsonify({'error': 'Invalid or missing required fields.'}), 400
+    except Exception:
+        return jsonify({'error': 'Failed to create contract.'}), 400
 
 
 @app.route('/api/categories', methods=['GET'])
@@ -584,4 +586,4 @@ with app.app_context():
     seed_data()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true')

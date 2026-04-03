@@ -314,7 +314,7 @@
       if (!strike || strike <= 0) errors.push('Strike price must be positive.');
       if (!premium || premium < 0) errors.push('Premium must be non-negative.');
       if (!expiry) errors.push('Expiry date is required.');
-      else if (new Date(expiry) <= new Date()) errors.push('Expiry date must be in the future.');
+      else if (new Date(expiry) < new Date()) errors.push('Expiry date must be in the future.');
       if (!wallet) errors.push('Seller wallet address is required.');
       else if (!/^0x[0-9a-fA-F]{40}$/.test(wallet)) errors.push('Seller wallet must be a valid Ethereum address (0x...).');
 
